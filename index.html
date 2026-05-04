@@ -216,11 +216,28 @@
         opacity: 0.9;
       }
 
+      .intro-view,
       .question-view,
       .loading-view,
       .solution-view {
         position: relative;
         padding: clamp(22px, 5vw, 42px);
+      }
+
+      .intro-view {
+        text-align: center;
+        animation: fadeUp 0.6s ease both;
+      }
+      
+      .intro-view.is-leaving {
+        animation: slideOut 0.22s ease both;
+      }
+
+      h1 u,
+      h2 u,
+      p u {
+        text-decoration: none;
+        color: var(--lime);
       }
 
       .question-view.is-leaving {
@@ -497,24 +514,91 @@
         line-height: 1.7;
       }
 
-      .solution-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
+      .solution-comparison {
+        display: flex;
+        flex-direction: column;
         gap: 10px;
         margin: 28px auto 0;
         max-width: 680px;
+        text-align: left;
       }
 
-      .solution-chip {
-        padding: 14px 12px;
-        border: 1px solid rgba(0, 208, 132, 0.22);
+      .comparison-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 20px;
         border-radius: 8px;
-        background: rgba(0, 208, 132, 0.08);
-        color: var(--ink);
-        font-size: 13px;
-        font-weight: 900;
         animation: answerEnter 0.5s ease both;
         animation-delay: calc(var(--i) * 0.08s);
+      }
+
+      .comparison-row.negative {
+        background: rgba(255, 80, 80, 0.05);
+        border: 1px solid rgba(255, 80, 80, 0.15);
+      }
+
+      .comparison-row.positive {
+        background: rgba(0, 208, 132, 0.12);
+        border: 1px solid rgba(0, 208, 132, 0.3);
+      }
+
+      .comparison-row .pain {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.4;
+      }
+
+      .comparison-row.negative .pain {
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .comparison-row.positive .pain {
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 16px;
+        font-weight: 800;
+      }
+
+      .comparison-row .arrow {
+        font-weight: 900;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+
+      .comparison-row.negative .arrow {
+        color: rgba(255, 80, 80, 0.6);
+      }
+
+      .comparison-row.positive .arrow {
+        color: var(--lime);
+      }
+
+      .comparison-row .verdict {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 800;
+        text-align: right;
+        line-height: 1.4;
+      }
+
+      .comparison-row.negative .verdict {
+        color: rgba(255, 80, 80, 0.9);
+      }
+
+      .comparison-row.positive .verdict.highlight {
+        color: var(--lime);
+        font-size: 16px;
+        font-weight: 900;
+      }
+
+      .comparison-divider {
+        height: 1px;
+        background: rgba(255, 255, 255, 0.08);
+        margin: 6px 0;
+        animation: fadeUp 0.5s ease both;
+        animation-delay: 0.5s;
       }
 
       .cta {
@@ -564,6 +648,7 @@
           padding-top: 26px;
         }
 
+        .intro-view,
         .question-view,
         .loading-view,
         .solution-view {
@@ -575,8 +660,19 @@
           padding: 16px;
         }
 
-        .solution-grid {
-          grid-template-columns: 1fr;
+        .comparison-row {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 6px;
+        }
+
+        .comparison-row .verdict {
+          text-align: left;
+        }
+
+        .comparison-row .arrow {
+          transform: rotate(90deg);
+          margin-left: 0;
         }
       }
 
@@ -743,22 +839,44 @@
 
     <div class="wrap">
       <header>
-        <img class="logo" src="./assets/logo-sublicontrol.png" alt="SubliControl Pro" />
+        <img class="logo" src="https://res.cloudinary.com/daijidw3t/image/upload/v1777931525/logo-sublicontrol_mzic7n.png" alt="SubliControl Pro" />
         <div class="trust"><span class="trust-dot"></span> Diagnostico para talleres que ya estan cansados de adivinar</div>
       </header>
 
       <main>
         <section class="quiz-shell" aria-live="polite">
-          <div class="microcopy">
-            <span id="questionCounter">Pregunta 1 de 5</span>
-            <span id="questionPercent">20%</span>
-          </div>
-          <div class="progress" aria-label="Progreso del diagnostico">
-            <div class="progress-bar" id="progressBar"></div>
+          <div id="quizHeader" class="hidden">
+            <div class="microcopy">
+              <span id="questionCounter">Pregunta 1 de 7</span>
+              <span id="questionPercent">14%</span>
+            </div>
+            <div class="progress" aria-label="Progreso del diagnostico">
+              <div class="progress-bar" id="progressBar"></div>
+            </div>
           </div>
 
           <article class="card">
-            <div class="question-view" id="questionView">
+            <div class="intro-view" id="introView">
+              <div class="question-image-wrap" style="margin-bottom: 28px;">
+                <img src="https://res.cloudinary.com/daijidw3t/image/upload/v1777931524/intro_quiz_chaos_imsf95.jpg" alt="Taller en caos" style="object-position: center 30%;" />
+              </div>
+              <div class="solution-badge">
+                <span class="trust-dot"></span>
+                Diagnóstico de Rentabilidad
+              </div>
+              <h2 class="solution-title">Vamos a descifrar en 35 segundos <u>por dónde se están escapando tus ganancias</u>.</h2>
+              <p class="solution-copy">
+                Toma este leve quiz para identificar los <u>cuellos de botella en tu taller</u> de sublimación. Te tomará solo 35 segundos y te daremos claridad inmediata.
+              </p>
+              <button class="cta" id="startQuizBtn" style="margin-top: 38px;">
+                Comenzar diagnóstico ahora
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" style="width: 21px; height: 21px;">
+                  <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
+
+            <div class="question-view hidden" id="questionView">
               <div class="question-image-wrap">
                 <img id="questionImage" src="" alt="" />
                 <div class="icon-box" id="questionIcon"></div>
@@ -802,18 +920,47 @@
                 existe justamente para que dejes de cobrar con ansiedad, perseguir pedidos en tu cabeza y preguntarte al
                 final del dia si realmente ganaste.
               </p>
-              <div class="solution-grid">
-                <div class="solution-chip" style="--i: 1">Costo real y precio sugerido</div>
-                <div class="solution-chip" style="--i: 2">Stock con alertas antes del caos</div>
-                <div class="solution-chip" style="--i: 3">Pedidos y ganancia neta en un solo lugar</div>
+              <div class="solution-comparison">
+                <div class="comparison-row negative" style="--i: 1">
+                  <span class="pain">Calcular precios y mermas a mano</span>
+                  <span class="arrow">←</span>
+                  <span class="verdict">No deberías de hacerlo tú</span>
+                </div>
+                <div class="comparison-row negative" style="--i: 2">
+                  <span class="pain">Vigilar el inventario para que no falte nada</span>
+                  <span class="arrow">←</span>
+                  <span class="verdict">No deberías de hacerlo tú</span>
+                </div>
+                <div class="comparison-row negative" style="--i: 3">
+                  <span class="pain">Rastrear y perseguir pedidos en WhatsApp</span>
+                  <span class="arrow">←</span>
+                  <span class="verdict">No deberías de hacerlo tú</span>
+                </div>
+                <div class="comparison-row negative" style="--i: 4">
+                  <span class="pain">Calcular tu hora de trabajo y luz "a ojo"</span>
+                  <span class="arrow">←</span>
+                  <span class="verdict">No deberías de hacerlo tú</span>
+                </div>
+                <div class="comparison-row negative" style="--i: 5">
+                  <span class="pain">Absorber costos por miedo a que el proveedor suba</span>
+                  <span class="arrow">←</span>
+                  <span class="verdict">No deberías de hacerlo tú</span>
+                </div>
+                
+                <div class="comparison-divider"></div>
+                
+                <div class="comparison-row positive" style="--i: 6">
+                  <span class="pain">Ser creativo y vender</span>
+                  <span class="arrow">←</span>
+                  <span class="verdict highlight">Es lo único que debes de hacer</span>
+                </div>
               </div>
-              <a class="cta" id="solutionCta" href="./lander.html">
+              <a class="cta" id="solutionCta" href="https://gabo-pixel20.github.io/sublicontrol-oferta/">
                 Ver como SubliControl lo soluciona
                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
               </a>
-              <div class="countdown">Te llevamos a la solucion completa en <span id="countdown">8</span>s</div>
             </div>
           </article>
 
@@ -842,9 +989,9 @@
       const questions = [
         {
           icon: "calculator",
-          image: "./assets/question_1_pricing.png",
+          image: "https://res.cloudinary.com/daijidw3t/image/upload/v1777931525/question_1_pricing_pzw4gx.jpg",
           eyebrow: "Cuando toca poner precio",
-          title: "¿Te ha pasado que das un precio, sonries frente al cliente... pero por dentro no sabes si acabas de regalar tu trabajo?",
+          title: "¿Te ha pasado que das un precio, sonríes frente al cliente... pero por dentro <u>no sabes si acabas de regalar tu trabajo</u>?",
           subtext:
             "Ese nudo aparece cuando no estas seguro de si contaste tinta, papel, tiempo, luz, merma y todo lo que realmente cuesta producir.",
           answers: [
@@ -855,9 +1002,9 @@
         },
         {
           icon: "stock",
-          image: "./assets/question_2_stock.png",
+          image: "https://res.cloudinary.com/daijidw3t/image/upload/v1777931525/question_2_stock_prgthh.jpg",
           eyebrow: "Cuando llega el pedido urgente",
-          title: "¿Que sientes cuando prometes una entrega y de pronto descubres que falta material?",
+          title: "¿Qué sientes cuando prometes una entrega y <u>de pronto descubres que falta material</u>?",
           subtext:
             "La frustracion no es solo por la tinta o el papel. Es por sentir que tu negocio depende de memoria, carreras y apagar incendios.",
           answers: [
@@ -868,9 +1015,9 @@
         },
         {
           icon: "orders",
-          image: "./assets/question_3_chaos.png",
+          image: "https://res.cloudinary.com/daijidw3t/image/upload/v1777931525/question_3_chaos_nrt2uj.jpg",
           eyebrow: "Cuando todo vive en WhatsApp",
-          title: "¿Cuantas veces has sentido que tu cabeza es la unica agenda real de tu taller?",
+          title: "¿Cuántas veces has sentido que <u>tu cabeza es la única agenda real</u> de tu taller?",
           subtext:
             "Pedidos en chats, notas sueltas, pantallazos, fechas de entrega y clientes preguntando. Eso agota incluso cuando si estas vendiendo.",
           answers: [
@@ -881,9 +1028,9 @@
         },
         {
           icon: "waste",
-          image: "./assets/question_4_waste.png",
+          image: "https://res.cloudinary.com/daijidw3t/image/upload/v1777931525/question_4_waste_ay40yo.jpg",
           eyebrow: "Cuando algo sale mal",
-          title: "¿Que pasa emocionalmente cuando se daña una pieza, se mancha una prenda o toca repetir un trabajo?",
+          title: "¿Qué pasa emocionalmente cuando se daña una pieza, se mancha una prenda o <u>toca repetir un trabajo</u>?",
           subtext:
             "Muchas veces uno dice 'eso pasa', pero por dentro sabe que cada error se esta comiendo tiempo, material y ganancia.",
           answers: [
@@ -894,15 +1041,41 @@
         },
         {
           icon: "clarity",
-          image: "./assets/question_5_uncertainty.png",
+          image: "https://res.cloudinary.com/daijidw3t/image/upload/v1777931526/question_5_uncertainty_pog3p5.jpg",
           eyebrow: "Al cerrar el dia",
-          title: "Cuando termina la jornada, ¿te quedas con paz... o con la duda de si todo ese esfuerzo realmente dejo ganancia?",
+          title: "Cuando termina la jornada, ¿te quedas con paz... o con la <u>duda de si todo ese esfuerzo realmente dejó ganancia</u>?",
           subtext:
             "Vender no siempre significa ganar. La tranquilidad aparece cuando puedes ver ingresos, costos, mermas y utilidad sin hacer magia con una calculadora.",
           answers: [
             "Me quedo con la duda casi siempre",
             "Solo miro cuanto entro, no cuanto quedo limpio",
             "Necesito demasiado tiempo para entender mis numeros",
+          ],
+        },
+        {
+          icon: "stock",
+          image: "https://res.cloudinary.com/daijidw3t/image/upload/v1777931526/question_6_inflation_p0nks8.jpg",
+          eyebrow: "Cuando todo se pone más caro",
+          title: "¿Qué sientes cuando tu proveedor sube los precios y tú <u>ya le diste un precio fijo a tu cliente</u>?",
+          subtext:
+            "El mercado sube, pero por miedo a perder la venta, muchos talleres absorben ese sobrecosto y sacrifican en silencio su propia ganancia.",
+          answers: [
+            "Absorbo el costo por miedo a que el cliente se vaya",
+            "Le subo al cliente, pero me toca lidiar con quejas",
+            "No tengo claro cuánto afecta mi ganancia realmente",
+          ],
+        },
+        {
+          icon: "calculator",
+          image: "https://res.cloudinary.com/daijidw3t/image/upload/v1777931526/question_7_overheads_drso8g.jpg",
+          eyebrow: "El verdadero costo de tu trabajo",
+          title: "A la hora de cotizar, ¿realmente estás cobrando <u>la luz, tu mano de obra y cada gota de tinta</u>?",
+          subtext:
+            "El error más doloroso no es cobrar barato, es creer que solo el papel y la taza son los únicos gastos que existen en tu taller.",
+          answers: [
+            "Para ser honesto, suelo calcular esos extras 'a ojo'",
+            "Solo cobro el material y le sumo un porcentaje encima",
+            "Me enredo tratando de calcular mi hora de trabajo",
           ],
         },
       ];
@@ -914,6 +1087,9 @@
       };
 
       const els = {
+        quizHeader: document.getElementById("quizHeader"),
+        introView: document.getElementById("introView"),
+        startQuizBtn: document.getElementById("startQuizBtn"),
         questionCounter: document.getElementById("questionCounter"),
         questionPercent: document.getElementById("questionPercent"),
         progressBar: document.getElementById("progressBar"),
@@ -927,14 +1103,13 @@
         loadingView: document.getElementById("loadingView"),
         solutionView: document.getElementById("solutionView"),
         analysisSteps: document.getElementById("analysisSteps"),
-        solutionCta: document.getElementById("solutionCta"),
-        countdown: document.getElementById("countdown"),
+        solutionCta: document.getElementById("solutionCta")
       };
 
       function landingUrl() {
         const params = new URLSearchParams(window.location.search);
         params.set("diagnostico", "quiz_emocional");
-        return `./lander.html?${params.toString()}`;
+        return `https://gabo-pixel20.github.io/sublicontrol-oferta/?${params.toString()}`;
       }
 
       function updateProgress() {
@@ -957,7 +1132,7 @@
 
         els.questionIcon.innerHTML = icons[q.icon];
         els.questionEyebrow.textContent = q.eyebrow;
-        els.questionTitle.textContent = q.title;
+        els.questionTitle.innerHTML = q.title;
         els.questionSubtext.textContent = q.subtext;
         els.answers.innerHTML = "";
 
@@ -1021,20 +1196,17 @@
         els.solutionView.classList.remove("hidden");
         const url = landingUrl();
         els.solutionCta.href = url;
-
-        let remaining = 8;
-        els.countdown.textContent = remaining;
-        const timer = window.setInterval(() => {
-          remaining -= 1;
-          els.countdown.textContent = remaining;
-          if (remaining <= 0) {
-            window.clearInterval(timer);
-            window.location.href = url;
-          }
-        }, 1000);
       }
 
-      renderQuestion();
+      els.startQuizBtn.addEventListener("click", () => {
+        els.introView.classList.add("is-leaving");
+        window.setTimeout(() => {
+          els.introView.classList.add("hidden");
+          els.quizHeader.classList.remove("hidden");
+          els.questionView.classList.remove("hidden");
+          renderQuestion();
+        }, 220);
+      });
     </script>
   </body>
 </html>
