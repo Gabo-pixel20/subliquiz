@@ -291,27 +291,7 @@
       opacity: 0.85;
     }
 
-    .icon-box {
-      position: absolute;
-      bottom: -29px;
-      left: 22px;
-      z-index: 2;
-      display: grid;
-      place-items: center;
-      width: 58px;
-      height: 58px;
-      border-radius: 8px;
-      margin-bottom: 0;
-      color: var(--dark);
-      background: var(--lime);
-      box-shadow: 0 16px 42px rgba(0, 208, 132, 0.18);
-      animation: float 4s ease-in-out infinite;
-    }
 
-    .icon-box svg {
-      width: 29px;
-      height: 29px;
-    }
 
     .eyebrow {
       margin: 0 0 12px;
@@ -706,8 +686,8 @@
       }
 
       .question-image-wrap {
-        height: 140px;
-        margin: 12px 0 !important;
+        height: 320px;
+        margin: 20px 0 !important;
       }
 
       h1 {
@@ -981,7 +961,6 @@
             <h1 id="questionTitle"></h1>
             <div class="question-image-wrap" style="margin: 24px 0;">
               <img id="questionImage" src="" alt="" />
-              <div class="icon-box" id="questionIcon"></div>
             </div>
             <p class="subtext" id="questionSubtext"></p>
             <div class="quiz-instruction">Responde, háblanos de ti</div>
@@ -1198,7 +1177,6 @@
       progressBar: document.getElementById("progressBar"),
       questionView: document.getElementById("questionView"),
       questionImage: document.getElementById("questionImage"),
-      questionIcon: document.getElementById("questionIcon"),
       questionEyebrow: document.getElementById("questionEyebrow"),
       questionTitle: document.getElementById("questionTitle"),
       questionSubtext: document.getElementById("questionSubtext"),
@@ -1234,7 +1212,7 @@
         els.questionImage.style.opacity = 0.85;
       }, 200);
 
-      els.questionIcon.innerHTML = icons[q.icon];
+
       els.questionEyebrow.textContent = q.eyebrow;
       els.questionTitle.innerHTML = q.title;
       els.questionSubtext.textContent = q.subtext;
