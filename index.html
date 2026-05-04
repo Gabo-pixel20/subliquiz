@@ -111,9 +111,26 @@
     }
 
     .logo {
-      width: 116px;
+      width: 100px;
       height: auto;
       animation: softPulse 3.6s ease-in-out infinite;
+      transition: width 0.3s ease;
+    }
+
+    .quiz-instruction {
+      color: var(--lime);
+      font-size: 13px;
+      font-weight: 900;
+      text-align: left;
+      margin: 28px 0 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: none;
+    }
+
+    .quiz-instruction.visible {
+      display: block;
+      animation: fadeUp 0.5s ease both;
     }
 
     .trust {
@@ -635,8 +652,23 @@
 
     @media (max-width: 680px) {
       .wrap {
-        width: min(100% - 28px, 1050px);
-        padding-top: 20px;
+        width: min(100% - 24px, 1050px);
+        padding-top: 5px;
+      }
+
+      header {
+        position: relative;
+        height: 30px;
+        margin-bottom: 0;
+        z-index: 10;
+      }
+
+      .logo {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 65px;
+        top: -5px;
       }
 
       .trust {
@@ -644,19 +676,63 @@
       }
 
       main {
-        padding-top: 26px;
+        padding-top: 5px;
+      }
+
+      .card {
+        margin-top: 10px;
+      }
+
+      .quiz-instruction {
+        font-size: 11px;
+        margin: 16px 0 8px;
+        text-align: left;
+      }
+
+      .microcopy {
+        margin-bottom: 6px;
+        font-size: 10px;
+      }
+
+      .progress {
+        height: 6px;
       }
 
       .intro-view,
       .question-view,
       .loading-view,
       .solution-view {
-        padding: 22px 20px;
+        padding: 16px 14px;
+      }
+
+      .question-image-wrap {
+        height: 140px;
+        margin: 12px 0 !important;
+      }
+
+      h1 {
+        font-size: 22px;
+        line-height: 1.2;
+      }
+
+      .subtext {
+        font-size: 13px;
+        margin-top: 6px;
+        line-height: 1.4;
+      }
+
+      .answers {
+        margin-top: 15px;
+        gap: 6px;
       }
 
       .answer {
-        min-height: 72px;
-        padding: 16px;
+        min-height: 52px;
+        padding: 10px 14px;
+      }
+
+      .answer span {
+        font-size: 14px;
       }
 
       .comparison-row {
@@ -908,6 +984,7 @@
               <div class="icon-box" id="questionIcon"></div>
             </div>
             <p class="subtext" id="questionSubtext"></p>
+            <div class="quiz-instruction">Responde, háblanos de ti</div>
             <div class="answers" id="answers"></div>
           </div>
 
@@ -1112,6 +1189,7 @@
     };
 
     const els = {
+      quizInstruction: document.querySelector(".quiz-instruction"),
       quizHeader: document.getElementById("quizHeader"),
       introView: document.getElementById("introView"),
       startQuizBtn: document.getElementById("startQuizBtn"),
@@ -1202,6 +1280,7 @@
       );
 
       els.questionView.classList.add("hidden");
+      els.quizInstruction.classList.remove("visible");
       els.loadingView.classList.remove("hidden");
       const steps = Array.from(els.analysisSteps.querySelectorAll(".analysis-step"));
       steps.forEach((step, index) => {
@@ -1229,6 +1308,7 @@
       window.setTimeout(() => {
         els.introView.classList.add("hidden");
         els.quizHeader.classList.remove("hidden");
+        els.quizInstruction.classList.add("visible");
         els.questionView.classList.remove("hidden");
         renderQuestion();
       }, 220);
